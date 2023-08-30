@@ -11,11 +11,22 @@ use App\Services\BadgeInformationService;
 
 class AchievementsController extends Controller
 {
-    public function index(User $user, UnlockedAchievementsService $unlockedService, NextAvailableAchievementsService $nextAvailableService, BadgeInformationService $badgeService)
+    protected $unlockedService;
+    protected $nextAvailableService;
+    protected $badgeService;
+
+    public function __construct(UnlockedAchievementsService $unlockedService, NextAvailableAchievementsService $nextAvailableService, BadgeInformationService $badgeService)
     {
-        $unlockedAchievements = $unlockedService->getUnlockedAchievements($user);
-        $nextAvailableAchievements = $nextAvailableService->getNextAvailableAchievements($user);
-        $badgeInformation = $badgeService->getBadgeInformation($user);
+        $this->unlockedService = $unlockedService;
+        $this->nextAvailableService = $nextAvailableService;
+        $this->badgeService = $badgeService;
+    }
+
+    public function index(User $user)
+    {
+        $unlockedAchievements = $this->unlockedService->getUnlockedAchievements($user);
+        $nextAvailableAchievements = $this->nextAvailableService->getNextAvailableAchievements($user);
+        $badgeInformation = $this->badgeService->getBadgeInformation($user);
 
         return [
             'unlocked_achievements' => $unlockedAchievements,
