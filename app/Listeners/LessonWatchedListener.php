@@ -20,7 +20,8 @@ class LessonWatchedListener implements ShouldQueue
         $lesson = $event->lesson;
         $user = $event->user;
 
-        $user->watched()->save($lesson);
+        // $user->watched()->save($lesson);
+        $user->lessons()->attach($lesson);
 
         $this->achievementService->unlockLessonWatchedAchievements($user);
     }

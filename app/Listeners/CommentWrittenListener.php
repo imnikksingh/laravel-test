@@ -18,10 +18,8 @@ class CommentWrittenListener implements ShouldQueue
     public function handle(CommentWritten $event)
     {
         $comment = $event->comment;
-        $user = $event->user;
+        $comment->save();
 
-        new Comment(['body' => $commentBody, 'user_id' => $user]);
-
-        $this->achievementService->unlockCommentWrittenAchievements($user);
+        $this->achievementService->unlockCommentWrittenAchievements($comment->user);
     }
 }
