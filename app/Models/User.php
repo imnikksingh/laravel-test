@@ -52,10 +52,10 @@ class User extends Authenticatable
 
     public function watched()
     {
-        return $this->belongsToMany(Lesson::class, 'user_lessons')->wherePivot('watched', true);;
+        return $this->belongsToMany(Lesson::class, 'lesson_user')->wherePivot('watched', true);;
     }
 
-    public function unlockedAchievementsCount()
+    public function unlockedAchievements()
     {
         $lessonsWatched = $this->watched()->count();
         $commentsWritten = $this->comments()->count();
@@ -73,12 +73,15 @@ class User extends Authenticatable
             '20 Comment Written' => $commentsWritten >= 20,
         ];
 
-        return count(array_filter($achievements));
+        // return count(array_filter($achievements));
+
+        $unlockedAchievements = collect(array_keys(array_filter($achievements)));
+        return $unlockedAchievements;
     }
 
     public function currentBadge()
     {
-        $unlockedAchievementsCount = $this->unlockedAchievementsCount();
+        $unlockedAchievementsCount = $this->unlockedAchievements()->count();
 
         if ($unlockedAchievementsCount >= 10) {
             return 'Master';

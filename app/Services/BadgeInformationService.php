@@ -31,7 +31,7 @@ class BadgeInformationService
             : null;
 
         $remainingToUnlockNextBadge = $nextBadge
-            ? $badgeInformation[$nextBadgeIndex]['required_achievements'] - $user->unlockedAchievementsCount()
+            ? $badgeInformation[$nextBadgeIndex]['required_achievements'] - $user->unlockedAchievements()->count()
             : 0;
 
         return [

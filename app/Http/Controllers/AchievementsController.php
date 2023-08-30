@@ -5,16 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Services\UnlockedAchievementsService;
+use App\Services\NextAvailableAchievementsService;
+use App\Services\BadgeInformationService;
+
 class AchievementsController extends Controller
 {
-    public function index(User $user)
+    public function index(User $user, UnlockedAchievementsService $unlockedService, NextAvailableAchievementsService $nextAvailableService, BadgeInformationService $badgeService)
     {
-        return response()->json([
-            'unlocked_achievements' => [],
-            'next_available_achievements' => [],
-            'current_badge' => '',
-            'next_badge' => '',
-            'remaing_to_unlock_next_badge' => 0
-        ]);
+        $unlockedAchievements = $unlockedService->getUnlockedAchievements($user);
+        $nextAvailableAchievements = $nextAvailableService->getNextAvailableAchievements($user);
+        $badgeInformation = $badgeService->getBadgeInformation($user);
+
+        return [
+            'unlocked_achievements' => $unlockedAchievements,
+            'next_available_achievements' => $nextAvailableAchievements,
+            'current_badge' => $badgeInformation['current_badge'],
+            'next_badge' => $badgeInformation['next_badge'],
+            'remaining_to_unlock_next_badge' => $badgeInformation['remaining_to_unlock_next_badge'],
+        ];
     }
 }
